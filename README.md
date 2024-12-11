@@ -1,8 +1,8 @@
 # QT-report
 # 第九組 成員:徐聖硯、張帟淇、郭至峻
-# 一、設計理念
-# 因為每次打開電腦就會看到桌面上有很多圖示，讓人感到非常難過，所以我們決定做出這個專案，在原有的基礎上，我們決定新增打獵及釣魚的遊戲。
+# 一、專案介紹
+# 我們打算做出一個視窗裡面有我們自製的小遊戲可以自行選擇要遊玩哪一個，我們計畫會製作兩個小遊戲，加入到裡面。
 # 二、功能
-# 幫助我們整理現有的遊戲，並且可以打開遊戲，這樣就不會有很多遊戲圖標在桌面上，讓你的桌面保持整潔，看著也非常舒服。
-# 三、視窗
-# 簡報網址 [https://docs.google.com/presentation/d/1IMEmOSGp2wUPMC4W7Hfp_Q-6qs91TU5jBZGkmK8celc/edit#slide=id.g31ba9523f72_0_17](https://docs.google.com/presentation/d/1IMEmOSGp2wUPMC4W7Hfp_Q-6qs91TU5jBZGkmK8celc/edit#slide=id.g31ba9523f72_0_6)
+# 在你無聊的時候可以打發時間，並且不會佔據電腦太多的容量，要玩時只需點擊圖示就可以遊玩。
+# 三、小遊戲
+# 我們計劃做出一個釣魚遊戲和一款打獵遊戲類似紅白機上的Duck Hunt。
