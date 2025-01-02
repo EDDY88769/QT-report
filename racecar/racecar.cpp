@@ -1,62 +1,96 @@
 ﻿#include "racecar.h"
-#include <QGraphicsRectItem>
 #include <QTimer>
-#include <QtGlobal>
-#include <cstdlib>
-#include <QDebug>
+#include <QGraphicsPixmapItem>
+#include <QKeyEvent>
 #include <QMessageBox>
-#include <algorithm>
-#include <random> // 用於 std::shuffle
 #include <QApplication>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QDebug>
+#include <random>
 
 Racecar::Racecar(QWidget *parent)
-    : QMainWindow(parent), laneWidth(800 / 3), score(0)
+    : QMainWindow(parent), laneWidth(1600 / 3), score(0), obstacleSpeed(10), obstacleInterval(1750) // 设置窗口宽度，并缩短障碍物生成间隔时间
 {
-    // 初始化視圖和場景
     scene = new QGraphicsScene(this);
     view = new QGraphicsView(scene, this);
 
-    // 設定主窗口大小
-    setCentralWidget(view);
-    resize(800, 600);
+    QPixmap bgPixmap(":/images/background.jpg");
+    background1 = new QGraphicsPixmapItem(bgPixmap);
+    background2 = new QGraphicsPixmapItem(bgPixmap);
+    background1->setPos(0, 0);
+    background2->setPos(0, -bgPixmap.height());
 
-    // 設定場景大小
-    scene->setSceneRect(0, 0, 800, 600);
+    // 将背景图片设置为底层
+    background1->setZValue(-1);
+    background2->setZValue(-1);
 
-    // 初始化路的位置
+    scene->addItem(background1);
+    scene->addItem(background2);
+
+    QWidget *centralWidget = new QWidget(this);
+    QHBoxLayout *mainLayout = new QHBoxLayout(centralWidget);
+    QVBoxLayout *sideLayout = new QVBoxLayout();
+
+    speedometer = new QDial(this);
+    speedometer->setRange(60, 400);
+    speedometer->setValue(60);
+
+    speedLabel = new QLabel(QString::number(60), this);
+    speedLabel->setAlignment(Qt::AlignCenter);
+
+    sideLayout->addWidget(speedometer);
+    sideLayout->addWidget(speedLabel);
+
+    mainLayout->addLayout(sideLayout);
+    mainLayout->addWidget(view);
+
+    setCentralWidget(centralWidget);
+    resize(1600, 800); // 调整窗口大小为1600宽度
+    scene->setSceneRect(0, 0, 1600, 800);
+
     lanes << laneWidth / 2 << 3 * laneWidth / 2 << 5 * laneWidth / 2;
 
-    // 添加玩家車輛
-    player = new QGraphicsRectItem(0, 0, 50, 100);
-    player->setBrush(Qt::cyan);
-    player->setPos(lanes[1] - 25, 500); // 初始位置在中間路
+    QPixmap carPixmap(":/images/car.png");
+    QPixmap scaledCarPixmap = carPixmap.scaled(100, 100, Qt::KeepAspectRatio);
+    player = new QGraphicsPixmapItem(scaledCarPixmap);
+    player->setPos(lanes[1] - player->boundingRect().width() / 2, scene->height() - scaledCarPixmap.height() - 50); // 汽车初始位置改为屏幕底部
     scene->addItem(player);
 
-    // 設定背景顏色
-    scene->setBackgroundBrush(Qt::black);
-
-    // 設定障礙物生成
     obstacleTimer = new QTimer(this);
     connect(obstacleTimer, &QTimer::timeout, this, &Racecar::createObstacle);
-    obstacleTimer->start(1500); // 每1.5秒生成一個障礙物
+    obstacleTimer->start(obstacleInterval); // 调整障碍物生成间隔时间
 
-    // 設定碰撞檢查計時器
     collisionTimer = new QTimer(this);
     connect(collisionTimer, &QTimer::timeout, this, &Racecar::checkCollision);
-    collisionTimer->start(50); // 每50毫秒檢查一次碰撞
+    collisionTimer->start(50);
 
-    // 設定分數增加計時器
+    backgroundTimer = new QTimer(this);
+    connect(backgroundTimer, &QTimer::timeout, this, &Racecar::moveBackground);
+    backgroundTimer->start(50);
+
     QTimer *scoreTimer = new QTimer(this);
     connect(scoreTimer, &QTimer::timeout, [=]() {
-        score++; // 每1毫秒增加一次分數
+        score++;
         qDebug() << "Score:" << score;
+
+        if (score % 10 == 0) {
+            obstacleSpeed += 2;
+            obstacleInterval = qMax(500, obstacleInterval - 100);
+            obstacleTimer->start(obstacleInterval);
+            qDebug() << "Obstacle speed increased to:" << obstacleSpeed;
+            qDebug() << "Obstacle interval decreased to:" << obstacleInterval;
+
+            int displaySpeed = qMin(400, 60 + obstacleSpeed * 10);
+            speedometer->setValue(displaySpeed);
+            speedLabel->setText(QString::number(displaySpeed));
+        }
     });
-    scoreTimer->start(1); // 每1毫秒計算一次分數
+    scoreTimer->start(1000);
 }
 
 Racecar::~Racecar()
 {
-    // 銷毀計時器，避免內存洩漏
     if (obstacleTimer) {
         obstacleTimer->stop();
         delete obstacleTimer;
@@ -65,32 +99,34 @@ Racecar::~Racecar()
         collisionTimer->stop();
         delete collisionTimer;
     }
+    if (backgroundTimer) {
+        backgroundTimer->stop();
+        delete backgroundTimer;
+    }
 }
 
 void Racecar::createObstacle()
 {
-    // 隨機選擇兩條路來生成障礙物
     QList<int> lanesToUse = {0, 1, 2};
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(lanesToUse.begin(), lanesToUse.end(), g);
-    lanesToUse.pop_back(); // 移除一個元素，確保只在兩條路上生成障礙物
+    lanesToUse.pop_back();
 
     for (int i : lanesToUse) {
-        QGraphicsRectItem *obstacle = new QGraphicsRectItem(0, 0, 50, 100);
-        obstacle->setBrush(Qt::red);
-        obstacle->setPos(lanes[i] - 25, 0);
+        QPixmap obstaclePixmap(":/images/triangle.png");
+        QPixmap scaledObstaclePixmap = obstaclePixmap.scaled(100, 75, Qt::KeepAspectRatio);
+        QGraphicsPixmapItem *obstacle = new QGraphicsPixmapItem(scaledObstaclePixmap);
+        obstacle->setPos(lanes[i] - obstacle->boundingRect().width() / 2, 0); // 障碍物从顶部生成
         scene->addItem(obstacle);
 
-        // 設置障礙物移動
         QTimer *moveTimer = new QTimer(this);
         connect(moveTimer, &QTimer::timeout, [obstacle, moveTimer, this]() {
-            obstacle->moveBy(0, 10);
-            if (obstacle->y() > 600) {
+            obstacle->moveBy(0, obstacleSpeed);
+            if (obstacle->y() > scene->height()) { // 超出屏幕底部时删除障碍物
                 scene->removeItem(obstacle);
-                delete obstacle; // 使用 deleteLater 確保安全刪除
-                moveTimer->deleteLater(); // 確保計時器也被安全刪除
-                qDebug() << "Obstacle removed, score increment.";
+                delete obstacle;
+                moveTimer->deleteLater();
             }
         });
         moveTimer->start(50);
@@ -101,7 +137,7 @@ void Racecar::checkCollision()
 {
     QList<QGraphicsItem *> collidingItems = player->collidingItems();
     foreach (QGraphicsItem *item, collidingItems) {
-        if (dynamic_cast<QGraphicsRectItem *>(item)) {
+        if (dynamic_cast<QGraphicsPixmapItem *>(item) && item != player && item != background1 && item != background2) {
             gameOver();
             return;
         }
@@ -112,17 +148,31 @@ void Racecar::gameOver()
 {
     obstacleTimer->stop();
     collisionTimer->stop();
+    backgroundTimer->stop();
     QMessageBox::information(this, "Game Over", QString("Game Over!\nYour Score: %1").arg(score));
     qApp->exit();
 }
 
+void Racecar::moveBackground()
+{
+    int moveSpeed = 2;
+    background1->moveBy(0, moveSpeed);
+    background2->moveBy(0, moveSpeed);
+
+    if (background1->y() >= scene->height()) {
+        background1->setPos(0, -background1->boundingRect().height());
+    }
+    if (background2->y() >= scene->height()) {
+        background2->setPos(0, -background2->boundingRect().height());
+    }
+}
+
 void Racecar::keyPressEvent(QKeyEvent *event)
 {
-    // 確保玩家車輛只能在三條路之間移動
     if (event->key() == Qt::Key_A && player->x() > laneWidth / 2) {
         player->moveBy(-laneWidth, 0);
     } else if (event->key() == Qt::Key_D && player->x() < (5 * laneWidth / 2) - laneWidth) {
         player->moveBy(laneWidth, 0);
     }
-    qDebug() << "Player position:" << player->pos(); // 調試鍵盤事件
+    qDebug() << "Player position:" << player->pos();
 }
