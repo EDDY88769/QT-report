@@ -5,7 +5,7 @@
 # 二、功能
 # 在你無聊的時候可以打發時間，要玩時只需點擊啟動就可以遊玩。
 # 三、小遊戲
-# 我們做了一款打鴨子的遊戲、賽車障礙賽、釣魚小遊戲。
+# 我們做了三款遊戲分別是打鴨子、賽車障礙賽、釣魚小遊戲。
 
 #賽車影片網址 https://youtu.be/aAqxxPcUsic
 ![image](https://github.com/user-attachments/assets/12068a48-b969-4758-8aa3-c6ca54ca940f)
