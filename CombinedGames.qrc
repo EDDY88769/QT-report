@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>background.jpg</file>
+        <file>car.png</file>
+        <file>duck.png</file>
+        <file>fish1.png</file>
+        <file>fish2.png</file>
+        <file>fish3.png</file>
+        <file>fish4.png</file>
+        <file>fish5.png</file>
+        <file>fish6.png</file>
+        <file>fish7.png</file>
+        <file>fish8.png</file>
+        <file>fish9.png</file>
+        <file>fish10.png</file>
+        <file>fish11.png</file>
+        <file>lake_background.jpg</file>
+        <file>triangle.png</file>
+        <file>backgrounds.jpg</file>
+    </qresource>
+    <qresource prefix="/sounds">
+        <file>hit.wav</file>
+    </qresource>
+</RCC>
