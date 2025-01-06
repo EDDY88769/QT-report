@@ -8,3 +8,5 @@
 # 我們想要一款打獵遊戲類似紅白機上的Duck Hunt，未來還有擴充的可能性。
 
 #賽車影片網址 https://youtu.be/aAqxxPcUsic
+![image](https://github.com/user-attachments/assets/12068a48-b969-4758-8aa3-c6ca54ca940f)
+
