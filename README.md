@@ -10,6 +10,7 @@
 #賽車影片網址 https://youtu.be/aAqxxPcUsic
 ![image](https://github.com/user-attachments/assets/12068a48-b969-4758-8aa3-c6ca54ca940f)
 #打鴨子
-![Uploading image.png…]()
+![image](https://github.com/user-attachments/assets/04074c6c-531c-4124-8c5a-e4a988db8a43)
+
 
 
