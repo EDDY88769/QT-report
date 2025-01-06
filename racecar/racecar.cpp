@@ -10,7 +10,7 @@
 #include <random>
 
 Racecar::Racecar(QWidget *parent)
-    : QMainWindow(parent), laneWidth(1600 / 3), score(0), obstacleSpeed(10), obstacleInterval(1750) // 设置窗口宽度，并缩短障碍物生成间隔时间
+    : QMainWindow(parent), laneWidth(1600 / 3), score(0), obstacleSpeed(10), obstacleInterval(1750) // 設定視窗寬度，並縮短障礙物生成間隔時間
 {
     scene = new QGraphicsScene(this);
     view = new QGraphicsView(scene, this);
@@ -21,7 +21,7 @@ Racecar::Racecar(QWidget *parent)
     background1->setPos(0, 0);
     background2->setPos(0, -bgPixmap.height());
 
-    // 将背景图片设置为底层
+    // 將背景圖片設為底層
     background1->setZValue(-1);
     background2->setZValue(-1);
 
@@ -46,7 +46,7 @@ Racecar::Racecar(QWidget *parent)
     mainLayout->addWidget(view);
 
     setCentralWidget(centralWidget);
-    resize(1600, 800); // 调整窗口大小为1600宽度
+    resize(1600, 800); // 調整視窗大小為寬度1600
     scene->setSceneRect(0, 0, 1600, 800);
 
     lanes << laneWidth / 2 << 3 * laneWidth / 2 << 5 * laneWidth / 2;
@@ -54,12 +54,12 @@ Racecar::Racecar(QWidget *parent)
     QPixmap carPixmap(":/images/car.png");
     QPixmap scaledCarPixmap = carPixmap.scaled(100, 100, Qt::KeepAspectRatio);
     player = new QGraphicsPixmapItem(scaledCarPixmap);
-    player->setPos(lanes[1] - player->boundingRect().width() / 2, scene->height() - scaledCarPixmap.height() - 50); // 汽车初始位置改为屏幕底部
+    player->setPos(lanes[1] - player->boundingRect().width() / 2, scene->height() - scaledCarPixmap.height() - 50); // 汽車初始位置改為螢幕底部
     scene->addItem(player);
 
     obstacleTimer = new QTimer(this);
     connect(obstacleTimer, &QTimer::timeout, this, &Racecar::createObstacle);
-    obstacleTimer->start(obstacleInterval); // 调整障碍物生成间隔时间
+    obstacleTimer->start(obstacleInterval); // 調整障礙物生成間隔時間
 
     collisionTimer = new QTimer(this);
     connect(collisionTimer, &QTimer::timeout, this, &Racecar::checkCollision);
@@ -117,13 +117,13 @@ void Racecar::createObstacle()
         QPixmap obstaclePixmap(":/images/triangle.png");
         QPixmap scaledObstaclePixmap = obstaclePixmap.scaled(100, 75, Qt::KeepAspectRatio);
         QGraphicsPixmapItem *obstacle = new QGraphicsPixmapItem(scaledObstaclePixmap);
-        obstacle->setPos(lanes[i] - obstacle->boundingRect().width() / 2, 0); // 障碍物从顶部生成
+        obstacle->setPos(lanes[i] - obstacle->boundingRect().width() / 2, 0); // 障礙物從頂部生成
         scene->addItem(obstacle);
 
         QTimer *moveTimer = new QTimer(this);
         connect(moveTimer, &QTimer::timeout, [obstacle, moveTimer, this]() {
             obstacle->moveBy(0, obstacleSpeed);
-            if (obstacle->y() > scene->height()) { // 超出屏幕底部时删除障碍物
+            if (obstacle->y() > scene->height()) { // 超出螢幕底部時刪除障礙物
                 scene->removeItem(obstacle);
                 delete obstacle;
                 moveTimer->deleteLater();
