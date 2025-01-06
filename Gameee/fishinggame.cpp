@@ -25,7 +25,7 @@ FishingGame::~FishingGame() {
 }
 
 void FishingGame::setupScene() {
-    QPixmap backgroundPixmap(":/lake_background.jpg");
+    QPixmap backgroundPixmap(":/images/lake_background.jpg");
     if (backgroundPixmap.isNull()) {
         qDebug() << "Error: Failed to load background image.";
         return;
@@ -55,17 +55,17 @@ void FishingGame::setupScene() {
     timerLabel->setStyleSheet("font-size: 24px; color: white; font-weight: bold;");
 
     fishList = {
-        {":/fish1.png", 30, 4.5f, 0.7f},
-        {":/fish2.png", 80, 6.0f, 0.5f},
-        {":/fish3.png", 100, 2.5f, 0.15f},
-        {":/fish4.png", 250, 10.5f, 0.1f},
-        {":/fish5.png", 30, 4.9f, 0.7f},
-        {":/fish6.png", 500, 15.0f, 0.05f},
-        {":/fish7.png", 90, 5.6f, 0.4f},
-        {":/fish8.png", 250, 8.9f, 0.1f},
-        {":/fish9.png", 1000, 20.0f, 0.05f},
-        {":/fish10.png", 2500, 25.0f, 0.01f},
-        {":/fish11.png", 1750, 12.5f, 0.025f},
+        {":/images/fish1.png", 30, 4.5f, 0.7f},
+        {":/images/fish2.png", 80, 6.0f, 0.5f},
+        {":/images/fish3.png", 100, 2.5f, 0.15f},
+        {":/images/fish4.png", 250, 10.5f, 0.1f},
+        {":/images/fish5.png", 30, 4.9f, 0.7f},
+        {":/images/fish6.png", 500, 15.0f, 0.05f},
+        {":/images/fish7.png", 90, 5.6f, 0.4f},
+        {":/images/fish8.png", 250, 8.9f, 0.1f},
+        {":/images/fish9.png", 1000, 20.0f, 0.05f},
+        {":/images/fish10.png", 2500, 25.0f, 0.01f},
+        {":/images/fish11.png", 1750, 12.5f, 0.025f},
     };
 }
 
