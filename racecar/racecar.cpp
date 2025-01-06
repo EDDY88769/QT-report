@@ -15,7 +15,7 @@ Racecar::Racecar(QWidget *parent)
     scene = new QGraphicsScene(this);
     view = new QGraphicsView(scene, this);
 
-    QPixmap bgPixmap(":/images/background.jpg");
+    QPixmap bgPixmap(":/images/backgrounds.jpg");
     background1 = new QGraphicsPixmapItem(bgPixmap);
     background2 = new QGraphicsPixmapItem(bgPixmap);
     background1->setPos(0, 0);
