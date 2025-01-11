@@ -14,4 +14,5 @@
 #釣魚小遊戲影片網址 https://youtu.be/pbP6s7j0JGk
 ![image](https://github.com/user-attachments/assets/3ed2bccc-5010-4a2b-929f-ea96f55ffdc6)
 
+#隨機小遊戲 https://youtu.be/qbvQjTQGDbo
 
